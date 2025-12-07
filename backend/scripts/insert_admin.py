@@ -7,7 +7,6 @@ conn = pymysql.connect(
     password="root123root123",
     database="latif_jewels"
 )
-
 cur = conn.cursor()
 username = "admin"
 password = "strongpassword123"
