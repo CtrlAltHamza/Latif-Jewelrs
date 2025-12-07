@@ -1,8 +1,8 @@
-Flask==2.3.7
+Flask==3.0.0
 flask-cors==4.0.0
-flask-jwt-extended==4.4.4
+flask-jwt-extended==4.5.2
 flask-limiter==3.5.0
 PyMySQL==1.1.0
 python-dotenv==1.0.0
-Werkzeug==2.3.7
+Werkzeug==3.0.0
 gunicorn==21.2.0
