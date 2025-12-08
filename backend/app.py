@@ -44,22 +44,6 @@ JWTManager(app)
 limiter = Limiter(key_func=get_remote_address)
 limiter.init_app(app)
 
-# Database connection with error handling
-def get_db():
-    try:
-        conn = pymysql.connect(
-            host=os.getenv("DB_HOST", "localhost"),
-            user=os.getenv("DB_USER", "root"),
-            password=os.getenv("DB_PASSWORD", ""),
-            database=os.getenv("DB_NAME", "latif_jewels"),
-            port=int(os.getenv("DB_PORT", 3306)),
-            autocommit=False
-        )
-        return conn
-    except Exception as e:
-        print(f"[ERROR] Database connection failed: {e}")
-        return None
-
 # Parse Railway MySQL URL format: mysql://user:password@host:port/database
 database_url = os.getenv("DATABASE_URL")
 
@@ -77,6 +61,22 @@ else:
     DB_PASSWORD = os.getenv("DB_PASSWORD")
     DB_NAME = os.getenv("DB_NAME")
     DB_PORT = int(os.getenv("DB_PORT", 3306))
+
+# Database connection with error handling
+def get_db():
+    try:
+        conn = pymysql.connect(
+            host=DB_HOST,
+            user=DB_USER,
+            password=DB_PASSWORD,
+            database=DB_NAME,
+            port=int(DB_PORT),
+            autocommit=False
+        )
+        return conn
+    except Exception as e:
+        print(f"[ERROR] Database connection failed: {e}")
+        return None
 
 @app.route("/rates", methods=["GET"])
 @limiter.limit("100 per hour")
