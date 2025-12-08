@@ -23,8 +23,13 @@ app.secret_key = os.getenv("JWT_SECRET_KEY")
 # CORS - ONLY allow your frontend domain
 CORS(app, resources={
     r"/*": {
-        "origins": [os.getenv("FRONTEND_URL", "http://localhost:5173")],
-        "methods": ["GET", "POST", "OPTIONS"],
+        "origins": [
+            "https://latif-jewelrs121.vercel.app",
+            "https://latif-jewelrs.vercel.app",
+            "http://localhost:5173",
+            "http://localhost:5002"
+        ],
+        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization"],
         "supports_credentials": True,
         "max_age": 3600
