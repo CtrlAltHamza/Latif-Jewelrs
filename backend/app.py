@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 import pymysql
 from werkzeug.security import check_password_hash
 from datetime import timedelta
+from urllib.parse import urlparse
 
 load_dotenv()
 
@@ -58,6 +59,24 @@ def get_db():
     except Exception as e:
         print(f"[ERROR] Database connection failed: {e}")
         return None
+
+# Parse Railway MySQL URL format: mysql://user:password@host:port/database
+database_url = os.getenv("DATABASE_URL")
+
+if database_url:
+    parsed = urlparse(database_url)
+    DB_HOST = parsed.hostname
+    DB_USER = parsed.username
+    DB_PASSWORD = parsed.password
+    DB_NAME = parsed.path.lstrip('/')
+    DB_PORT = parsed.port or 3306
+else:
+    # Fallback to individual variables
+    DB_HOST = os.getenv("DB_HOST")
+    DB_USER = os.getenv("DB_USER")
+    DB_PASSWORD = os.getenv("DB_PASSWORD")
+    DB_NAME = os.getenv("DB_NAME")
+    DB_PORT = int(os.getenv("DB_PORT", 3306))
 
 @app.route("/rates", methods=["GET"])
 @limiter.limit("100 per hour")
