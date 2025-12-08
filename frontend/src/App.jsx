@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -12,6 +13,7 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Admin from "./pages/Admin";
 import AdminLogin from "./pages/AdminLogin";
+import { fetchRates } from "./api";
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -47,17 +49,11 @@ export function RatesSection({ rates: initialRates }) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (initialRates) return; // already provided
+    if (initialRates) return;
     let cancelled = false;
     setLoading(true);
-    fetch("http://127.0.0.1:5002/prices", { credentials: "include" })
-      .then(async (res) => {
-        if (!res.ok) {
-          const text = await res.text().catch(() => "");
-          throw new Error(res.status + " " + (text || res.statusText));
-        }
-        return res.json();
-      })
+    
+    fetchRates()
       .then((data) => {
         if (!cancelled) {
           setRates(data);
@@ -73,6 +69,7 @@ export function RatesSection({ rates: initialRates }) {
       .finally(() => {
         if (!cancelled) setLoading(false);
       });
+    
     return () => {
       cancelled = true;
     };
